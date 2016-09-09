@@ -8,12 +8,13 @@ class Solution(object):
         nums.sort()
         parent = {-1: -1}
         length = {-1: -1}
-        for i in xrange(0, len(nums)):
-            parent[nums[i]] = max((d for d in length if nums[i] % d == 0), key=lambda d: length[d])
-            length[nums[i]] = length[parent[nums[i]]] + 1
+        for num in nums:
+            parent[num] = max((d for d in length if num % d == 0),
+                              key=lambda d: length[d])
+            length[num] = length[parent[num]] + 1
 
         def seq():
-            num = max(length, key=lambda n: length[n])
+            num = max(length.iteritems(), key=lambda n: n[1])[0]
             while num != -1:
                 yield num
                 num = parent[num]
