@@ -5,21 +5,24 @@ class Solution(object):
         :type b: List[int]
         :rtype: int
         """
-        self.cache10 = {}
-        c = 1
-        for d in enumerate(reversed(b)):
-            c *= self.pow10(a ** d[1] % 1337, d[0])
-            c %= 1337
-        return c
+        a %= 1337
+        if a == 0:
+            return 0
+        powa = []
+        period = 1338
+        c = a
+        for i in xrange(0, 1337):
+            powa.append(c)
+            c = c * a % 1337
+            if c == a:
+                period = i + 1
+                break
+        modb = self.mod(b, period)
+        return powa[period - 1 if modb == 0 else modb - 1]
 
-    def pow10(self, a, mul10):
-        if (a, mul10) in self.cache10:
-            return self.cache10[a, mul10]
-        if mul10 == 0:
-            self.cache10[a, 0] = a
-        elif mul10 == 1:
-            self.cache10[a, 1] = a ** 10 % 1337
-        else:
-            self.cache10[a, mul10] = self.pow10(self.pow10(a, mul10 // 2) % 1337,
-                                                mul10 - mul10 // 2) % 1337
-        return self.cache10[a, mul10]
+    @staticmethod
+    def mod(b, period):
+        m = 0
+        for d in b:
+            m = (m * 10 + d) % period
+        return m
