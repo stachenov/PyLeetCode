@@ -8,16 +8,10 @@ class Solution(object):
         :type updates: List[List[int]]
         :rtype: List[int]
         """
-        key_points = [kp
-                      for i, j, inc in updates
-                      for kp in [(i, +inc), (j + 1, -inc)]]
-        key_points.sort(key=lambda kp: kp[0])
-        key_points = dict((i, sum(kp[1] for kp in g))
-                          for i, g in groupby(key_points, key=lambda kp: kp[0]))
-        array = [0] * length
-        inc = 0
-        for i in xrange(0, length):
-            if i in key_points:
-                inc += key_points[i]
-            array[i] += inc
-        return array
+        array = [0] * (length + 1)
+        for u in updates:
+            array[u[0]] += u[2]
+            array[u[1] + 1] -= u[2]
+        for i in xrange(1, length):
+            array[i] += array[i - 1]
+        return array[:length]
