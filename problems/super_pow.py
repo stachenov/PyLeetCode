@@ -1,3 +1,6 @@
+from itertools import count
+
+
 class Solution(object):
     def superPow(self, a, b):
         """
@@ -10,7 +13,7 @@ class Solution(object):
             return 0
         start = self.find_cycle(a)
         period, powa = self.compute_powers(a, start)
-        if self.less(b, start):
+        if reversed(b) < ((start // 10 ** p) % 10 for p in count()):
             return powa[self.mod(b, start)]
         else:
             return powa[start] * powa[self.mod(self.subtract(b, start), period)] % 1337
@@ -41,16 +44,6 @@ class Solution(object):
                 period = i - start
                 break
         return period, powa
-
-    @staticmethod
-    def less(b, c):
-        for d in reversed(b):
-            if d > c % 10:
-                return False
-            elif d < c % 10:
-                return True
-            c //= 10
-        return False
 
     @staticmethod
     def subtract(b, c):
