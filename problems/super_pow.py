@@ -9,12 +9,7 @@ class Solution(object):
         if a == 0:
             return 0
         start = self.find_cycle(a)
-        powa = [1]
-        for i in xrange(1, 1337):
-            powa.append(powa[i - 1] * a % 1337)
-            if i > start and powa[i] == powa[start]:
-                period = i - start
-                break
+        period, powa = self.compute_powers(a, start)
         if self.less(b, start):
             return powa[self.mod(b, start)]
         else:
@@ -36,6 +31,16 @@ class Solution(object):
             slow = slow * a % 1337
             finder = finder * a % 1337
         return pow
+
+    @staticmethod
+    def compute_powers(a, start):
+        powa = [1]
+        for i in xrange(1, 1337):
+            powa.append(powa[i - 1] * a % 1337)
+            if i > start and powa[i] == powa[start]:
+                period = i - start
+                break
+        return period, powa
 
     @staticmethod
     def less(b, c):
