@@ -4,15 +4,21 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        cache = {}
+        # money[size][start] is how much we need to guess a number in the
+        # start (inclusive) ... start + size (exclusive) range
+        money = [[0] * (n + 2)] * 2 # don't need money to guess 0 or 1 number
 
-        def get_money_amount(i, j):
-            if (i, j) in cache:
-                return cache[(i, j)]
-            if j - i <= 1:
-                return 0
-            cache[(i, j)] = min(k + max(get_money_amount(i, k), get_money_amount(k + 1, j))
-                                for k in xrange(i, j))
-            return cache[(i, j)]
+        def left_part_size(guess, start):
+            return guess - start
 
-        return get_money_amount(1, n + 1)
+        def right_part_size(guess, start, size):
+            return size - left_part_size(guess, start) - 1
+
+        for size in xrange(2, n + 1):
+            money.append([0])
+            max_start = n + 1 - size
+            for start in xrange(1, max_start + 1):
+                money[size].append(min(guess + max(money[left_part_size(guess, start)][start],
+                                                   money[right_part_size(guess, start, size)][guess + 1])
+                                       for guess in xrange(start, start + size)))
+        return money[n][1]
