@@ -8,9 +8,9 @@ class Solution(object):
         while n != 1:
             if n % 2 == 0:
                 n //= 2
-            elif bin(n + 1).count("1") < bin(n - 1).count("1"):
-                n += 1
-            else:
+            elif n == 3 or n / 2 % 2 == 0:
                 n -= 1
+            else:
+                n += 1
             c += 1
         return c
