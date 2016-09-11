@@ -1,6 +1,4 @@
 import random
-from bisect import bisect_left
-from bisect import bisect_right
 
 
 class Solution(object):
@@ -10,19 +8,20 @@ class Solution(object):
         :type nums: List[int]
         :type numsSize: int
         """
-        nums_index = sorted(((i, n) for i, n in enumerate(nums)),
-                            key=lambda t: t[1])
-        self.nums = [t[1] for t in nums_index]
-        self.indices = [t[0] for t in nums_index]
+        self.nums = nums
 
     def pick(self, target):
         """
         :type target: int
         :rtype: int
         """
-        start = bisect_left(self.nums, target)
-        end = bisect_right(self.nums, target)
-        return self.indices[random.randint(start, end - 1)]
+        c = 0
+        for i, n in enumerate(self.nums):
+            if n == target:
+                if random.randint(0, c) == 0:
+                    pick = i
+                c += 1
+        return pick
 
 # Your Solution object will be instantiated and called as such:
 # obj = Solution(nums)
