@@ -1,10 +1,4 @@
-def expand(eqs_for, x, y, zeroes):
-    for z in eqs_for[y].keys():
-        if z in zeroes:
-            zeroes.add(x)
-        elif z not in eqs_for[x].keys():
-            eqs_for[x][z] = eqs_for[x][y] * eqs_for[y][z]
-            expand(eqs_for, x, z, zeroes)
+from collections import defaultdict
 
 
 class Solution(object):
@@ -15,36 +9,36 @@ class Solution(object):
         :type query: List[List[str]]
         :rtype: List[float]
         """
-        eqs_for = {}
-        zeroes = set()
-        for i in xrange(0, len(equations)):
-            eq = equations[i]
-            val = float(values[i])
-            if val == 0:
-                zeroes += eq[0]
-            else:
-                eqf = eqs_for.get(eq[0], {eq[0]: 1})
-                eqf[eq[1]] = val
-                eqs_for[eq[0]] = eqf
-                eqf = eqs_for.get(eq[1], {eq[1]: 1})
-                eqf[eq[0]] = 1 / val
-                eqs_for[eq[1]] = eqf
+        eqs_for = dict((x, {x: 1})
+                       for eq in equations
+                       for x in eq)
+        eqs_for.update(dict((eq[0], {eq[1]: float(val)})
+                            for eq, val in zip(equations, values)))
+        eqs_for.update(dict((eq[1], {eq[0]: 1 / float(val)})
+                            for eq, val in zip(equations, values) if val != 0))
+        zeroes = set(eq[0] for eq, val in zip(equations, values) if val == 0)
+
+        def expand(x, y):
+            if any(z in zeroes for z in eqs_for[y]):
+                zeroes.add(x)
+            for z in set(eqs_for[y].keys()) - set(eqs_for[x].keys()):
+                eqs_for[x][z] = eqs_for[x][y] * eqs_for[y][z]
+                expand(x, z)
+
         for x in eqs_for:
             for y in eqs_for[x].keys():
-                expand(eqs_for, x, y, zeroes)
+                expand(x, y)
         res = []
-        for q in query:
-            if q[0] in zeroes:
+        for x, y in query:
+            if x in zeroes:
                 res.append(0)
-            elif q[0] not in eqs_for or q[1] not in eqs_for:
+            elif x not in eqs_for or y not in eqs_for:
                 res.append(-1)
             else:
-                eq0 = eqs_for[q[0]]
-                eq1 = eqs_for[q[1]]
-                common = set(eq0.keys()).intersection(set(eq1.keys()))
+                common = set(eqs_for[x].keys()) & set(eqs_for[y].keys())
                 if not common:
                     res.append(-1)
                 else:
-                    k = common.pop()
-                    res.append(eq0[k] / eq1[k])
+                    z = common.pop()
+                    res.append(eqs_for[x][z] / eqs_for[y][z])
         return res
