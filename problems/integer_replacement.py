@@ -4,13 +4,11 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        c = 0
-        while n != 1:
-            if n % 2 == 0:
-                n //= 2
-            elif n == 3 or n / 2 % 2 == 0:
-                n -= 1
-            else:
-                n += 1
-            c += 1
-        return c
+        if n < 4:
+            return [0, 0, 1, 2][n]
+        elif (n & 0b01) == 0b00:
+            return self.integerReplacement(n / 2) + 1
+        elif (n & 0b11) == 0b01:
+            return self.integerReplacement(n - 1) + 1
+        else:
+            return self.integerReplacement(n + 1) + 1
