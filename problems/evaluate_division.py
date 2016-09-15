@@ -1,4 +1,5 @@
 from collections import defaultdict
+from itertools import permutations
 
 
 class Solution(object):
@@ -9,36 +10,13 @@ class Solution(object):
         :type query: List[List[str]]
         :rtype: List[float]
         """
-        eqs_for = dict((x, {x: 1})
-                       for eq in equations
-                       for x in eq)
-        eqs_for.update(dict((eq[0], {eq[1]: float(val)})
-                            for eq, val in zip(equations, values)))
-        eqs_for.update(dict((eq[1], {eq[0]: 1 / float(val)})
-                            for eq, val in zip(equations, values) if val != 0))
-        zeroes = set(eq[0] for eq, val in zip(equations, values) if val == 0)
-
-        def expand(x, y):
-            if any(z in zeroes for z in eqs_for[y]):
-                zeroes.add(x)
-            for z in set(eqs_for[y].keys()) - set(eqs_for[x].keys()):
-                eqs_for[x][z] = eqs_for[x][y] * eqs_for[y][z]
-                expand(x, z)
-
-        for x in eqs_for:
-            for y in eqs_for[x].keys():
-                expand(x, y)
-        res = []
-        for x, y in query:
-            if x in zeroes:
-                res.append(0)
-            elif x not in eqs_for or y not in eqs_for:
-                res.append(-1)
-            else:
-                common = set(eqs_for[x].keys()) & set(eqs_for[y].keys())
-                if not common:
-                    res.append(-1)
-                else:
-                    z = common.pop()
-                    res.append(eqs_for[x][z] / eqs_for[y][z])
-        return res
+        quot_for = defaultdict(dict)
+        for (x, y), quot in zip(equations, map(float, values)):
+            quot_for[x][x] = quot_for[y][y] = 1
+            quot_for[x][y] = quot
+            if quot != 0:
+                quot_for[y][x] = 1 / quot
+        for x, y, z in permutations(quot_for, 3):
+            if y in quot_for[x] and z in quot_for[y]:
+                quot_for[x][z] = quot_for[x][y] * quot_for[y][z]
+        return [quot_for[x].get(y, -1) for x, y in query]
