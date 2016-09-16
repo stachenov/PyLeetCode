@@ -1,5 +1,5 @@
 import pytest
-from problems.longest_with_k_repeating_characters import Solution
+from problems.longest_with_k_repeating_chars import Solution
 
 
 @pytest.mark.parametrize("s,k,expected", [
