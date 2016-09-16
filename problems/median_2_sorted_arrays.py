@@ -5,7 +5,7 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
-        if len(nums1) < len(nums2):
+        if len(nums1) > len(nums2):
             return self.findMedianSortedArrays(nums2, nums1)
         if not nums2:
             mid1 = len(nums1) / 2
