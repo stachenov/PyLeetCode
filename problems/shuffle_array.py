@@ -22,6 +22,7 @@ class Solution(object):
         Returns a random shuffling of the array.
         :rtype: List[int]
         """
+        # CLR, 3rd ed., p. 125
         copy = list(self.nums)
         for i in xrange(len(self.nums)):
             j = random.randint(i, len(self.nums) - 1)

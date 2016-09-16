@@ -4,6 +4,7 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
+        # one of the editorial solutions
         if not nums:
             return 0
         max_len_peak, max_len_valley = 1, 1

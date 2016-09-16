@@ -20,6 +20,7 @@ class Solution(object):
 
     @staticmethod
     def find_cycle(a):
+        # Floyd's Tortoise and the Hare algorithm
         slow = 1
         fast = 1
         while True:

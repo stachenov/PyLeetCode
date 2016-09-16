@@ -1,3 +1,4 @@
+# coding=utf-8
 from collections import defaultdict
 from itertools import permutations
 
@@ -10,6 +11,7 @@ class Solution(object):
         :type query: List[List[str]]
         :rtype: List[float]
         """
+        # Floyd–Warshall algorithm, original idea by @StefanPochmann
         quot_for = defaultdict(dict)
         for (x, y), quot in zip(equations, map(float, values)):
             quot_for[x][x] = quot_for[y][y] = 1
