@@ -1,20 +1,16 @@
+from collections import defaultdict
+
+
 class Solution(object):
     def lengthOfLongestSubstring(self, s):
         """
         :type s: str
         :rtype: int
         """
-        i, j = 0, 0
-        chars = set()
-        answer = 0
-        while i < len(s):
-            while j < len(s) and not s[j] in chars:
-                chars.add(s[j])
-                j += 1
-            answer = max(answer, j - i)
-            if j == len(s):
-                break
-            k = s.index(s[j], i)
-            chars -= set(s[i:k])
-            i, j = k + 1, j + 1
+        # Editorial approach #3
+        i, j, indices, answer = 0, 0, defaultdict(lambda: -1), 0
+        for j, c in enumerate(s):
+            i = max(i, indices[c] + 1)
+            answer = max(answer, j + 1 - i)
+            indices[c] = j
         return answer
