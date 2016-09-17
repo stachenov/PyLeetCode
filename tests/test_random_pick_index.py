@@ -10,7 +10,7 @@ from problems.random_pick_index import Solution
 ])
 def test(nums):
     solution = Solution(nums)
-    sample = 10000
+    sample = 100000
     values = {n for n in nums}
     for value in values:
         ind = []
