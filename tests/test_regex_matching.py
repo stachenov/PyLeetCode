@@ -1,5 +1,5 @@
 import pytest
-from problems.regex_matching import Solution
+from problems import regex_matching_dp, regex_matching_nfa
 
 
 @pytest.mark.parametrize("s,p,expected", [
@@ -25,6 +25,8 @@ from problems.regex_matching import Solution
     ("bb", "c*a*b*", True),
     ("cc", "c*a*b*", True),
     ("aa", "c*a*b*", True),
+    ("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*a*a*b", True),
 ])
 def test(s, p, expected):
-    assert Solution().isMatch(s, p) == expected
+    assert regex_matching_dp.Solution().isMatch(s, p) == expected
+    assert regex_matching_nfa.Solution().isMatch(s, p) == expected
