@@ -7,6 +7,10 @@ from problems.remove_k_digits import Solution
     ("10200", 1, "200"),
     ("10", 2, "0"),
     ("10", 1, "0"),
+    ("9", 1, "0"),
+    ("19", 1, "1"),
+    ("91", 1, "1"),
+    ("1234567890", 9, "0"),
 ])
-def test(num, k, expected):
+def test_removeKdigits(num, k, expected):
     assert Solution().removeKdigits(num, k) == expected
