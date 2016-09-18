@@ -2,7 +2,10 @@ from heapq import heapify, heappop, heappush
 
 
 class Solution(object):
-    def maxArea(self, height):
+    def __init__(self):
+        self.maxArea = self.max_area_editorial
+
+    def max_area_heap(self, height):
         """
         :type height: List[int]
         :rtype: int
@@ -26,3 +29,14 @@ class Solution(object):
             if top_left != top_right:
                 heappush(heap, top_right)
         return -area
+
+    def max_area_editorial(self, height):
+        i, j = 0, len(height) - 1
+        area = 0
+        while i < j:
+            area = max(area, (j - i) * min(height[i], height[j]))
+            if height[i] < height[j]:
+                i += 1
+            else:
+                j -= 1
+        return area
