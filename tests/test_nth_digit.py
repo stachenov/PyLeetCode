@@ -28,5 +28,5 @@ from problems.nth_digit import Solution
     (2896, 0),
     (2897, 1),
 ])
-def test(n, expected):
+def test_findNthDigit(n, expected):
     assert Solution().findNthDigit(n) == expected
