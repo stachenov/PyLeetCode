@@ -16,3 +16,21 @@ class Solution(object):
                     if stone + jump + d in stones_set:
                         incoming_jumps[stone + jump + d].add(jump + d)
         return bool(incoming_jumps[stones[-1]])
+
+    def canCross_topDown(self, stones):
+        # Original idea by @AlgoGuruZ, code mine
+        if stones[1] != 1:
+            return False
+        stones_set = set(stones)
+        known = {}
+        def canCross(s1, s2):
+            if (s1, s2) not in known:
+                if s2 == stones[-1]:
+                    known[(s1, s2)] = True
+                else:
+                    d = s2 - s1
+                    known[(s1, s2)] = any(canCross(s2, s3) for s3
+                                          in xrange(s2 + d - 1 if d > 1 else s2 + d, s2 + d + 2)
+                                          if s3 in stones_set)
+            return known[(s1, s2)]
+        return canCross(0, 1)
