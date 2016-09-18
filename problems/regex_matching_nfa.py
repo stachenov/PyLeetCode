@@ -5,37 +5,31 @@ class Solution(object):
         :type p: str
         :rtype: bool
         """
-        start = []
-        state = start
+        state_chars = []
+        state_transitions = []
         i = 0
-        statelist = [start]
         while i < len(p):
             if i == len(p) - 1 or p[i + 1] != '*':
-                new_state = []
-                state += [p[i], len(statelist)]
-                statelist.append(new_state)
-                state = new_state
+                state_chars.append(p[i])
+                state_transitions.append([len(state_chars)])
                 i += 1
             else:
-                repeat_state, new_state = [p[i], len(statelist) - 1], []
-                state += [len(statelist), len(statelist) + 1]
-                statelist += [repeat_state, new_state]
-                state = new_state
+                state_chars.append(None) # fork
+                state_transitions.append([len(state_chars), len(state_chars) + 1])
+                state_transitions.append([len(state_chars) - 1])
+                state_chars.append(p[i])
                 i += 2
-        final_state = len(statelist) - 1
         def follow_forks(state):
-            if not statelist[state] or type(statelist[state][0]) is not int:
-                return {state}
+            if state < len(state_chars) and state_chars[state] is None:
+                return {s for t in state_transitions[state] for s in follow_forks(t)}
             else:
-                return {s for t in statelist[state] for s in follow_forks(t)}
+                return {state}
+        def next_states(state, char):
+            if state == len(state_chars) or state_chars[state] != '.' and state_chars[state] != char:
+                return {}
+            else:
+                return follow_forks(state_transitions[state][0])
         states = follow_forks(0)
         for c in s:
-            new_states = set()
-            for state in states:
-                if not statelist[state] or (statelist[state][0] != '.' and statelist[state][0] != c):
-                    continue
-                new_states |= follow_forks(statelist[state][1])
-            if not new_states:
-                return False
-            states = new_states
-        return final_state in states
+            states = {ns for state in states for ns in next_states(state, c)}
+        return len(state_chars) in states
