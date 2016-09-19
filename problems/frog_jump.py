@@ -28,7 +28,7 @@ class Solution(object):
                 else:
                     d2 = s2 - s1
                     known[s1, s2] = any(canCross(s2, s2 + d3) for d3
-                                        in xrange(max(d2 - 1, 1), d2 + 2)
+                                        in xrange(d2 + 1, max(d2 - 2, 0), -1)
                                         if s2 + d3 in stones_set)
             return known[s1, s2]
         return canCross(0, 0)
