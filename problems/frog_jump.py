@@ -22,9 +22,9 @@ class Solution(object):
         stones_set = set(stones)
         known = {}
         def canCross(s1, s2):
-            if s2 == stones[-1]:
-                return True
             if (s1, s2) not in known:
+                if s2 == stones[-1]:
+                    return True
                 d2 = s2 - s1
                 known[s1, s2] = any(canCross(s2, s2 + d3) for d3
                                     in xrange(d2 + 1, max(d2 - 2, 0), -1)
