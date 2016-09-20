@@ -26,3 +26,8 @@ def test_mergeKLists(lists, expected):
         assert list(res) == expected
     else:
         assert res is None
+    res = Solution().mergeKLists_recursive(map(convert, lists))
+    if expected:
+        assert list(res) == expected
+    else:
+        assert res is None
