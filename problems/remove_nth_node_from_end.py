@@ -1,3 +1,5 @@
+from classes import ListNode
+
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, x):
@@ -11,14 +13,13 @@ class Solution(object):
         :type n: int
         :rtype: ListNode
         """
-        ahead = head
+        dummy = ListNode(0)
+        dummy.next = head
+        ahead = dummy
         for __ in xrange(n + 1):
-            if ahead is None:
-                return head.next
             ahead = ahead.next
-        node = head
+        node = dummy
         while ahead is not None:
-            node = node.next
-            ahead = ahead.next
+            node, ahead = node.next, ahead.next
         node.next = node.next.next
-        return head
+        return dummy.next
