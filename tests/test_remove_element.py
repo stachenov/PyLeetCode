@@ -1,3 +1,5 @@
+from collections import Counter
+
 import pytest
 from problems.remove_element import Solution
 
@@ -12,4 +14,4 @@ def test_removeElement(nums, val):
     expected = [n for n in nums if n != val]
     l = Solution().removeElement(nums, val)
     assert l == len(expected)
-    assert nums[:l] == expected
+    assert Counter(nums[:l]) == Counter(expected)

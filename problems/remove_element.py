@@ -5,9 +5,11 @@ class Solution(object):
         :type val: int
         :rtype: int
         """
-        i = 0
-        for j in xrange(len(nums)):
-            if nums[j] != val:
+        i, j = 0, len(nums) - 1
+        while i <= j:
+            if nums[i] == val:
                 nums[i] = nums[j]
+                j -= 1
+            else:
                 i += 1
-        return i
+        return j + 1
