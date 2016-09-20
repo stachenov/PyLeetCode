@@ -9,8 +9,9 @@ class Solution(object):
         """
         nums.sort()
         res = []
-        i = 0
-        while i <= len(nums) - 3:
+        for i in xrange(len(nums) - 2):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
             r = -nums[i]
             j, k = i + 1, len(nums) - 1
             while j < k:
@@ -22,7 +23,4 @@ class Solution(object):
                     res.append([nums[i], nums[j], nums[k]])
                     while j < k and nums[j] + nums[k] == r:
                         j += 1
-            while i <= len(nums) - 3 and nums[i] == nums[i + 1]:
-                i += 1
-            i += 1
         return res
