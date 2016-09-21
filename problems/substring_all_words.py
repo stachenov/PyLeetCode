@@ -11,21 +11,22 @@ class Solution(object):
         total_len = sum(map(len, words))
         if total_len > len(s) or not words:
             return []
+        wc = Counter(words)
+        wl = len(words[0])
         res = []
-        word_count = Counter(words)
-        def have_all(start):
-            if not word_count:
-                return True
-            for w in word_count.keys():
-                if s[start: start + len(w)] == w:
-                    word_count[w] -= 1
-                    if word_count[w] == 0:
-                        del word_count[w]
-                    if have_all(start + len(w)):
-                        word_count[w] = word_count.get(w, 0) + 1
-                        return True
-                    word_count[w] = word_count.get(w, 0) + 1
-        for start in xrange(0, len(s) - total_len + 1):
-            if have_all(start):
-                res.append(start)
+        for shift in xrange(0, wl):
+            i, j = shift, shift
+            while i <= len(s) - wl:
+                if j - i < total_len and j <= len(s) - wl and wc.get(s[j: j + wl], 0) > 0:
+                    wc[s[j: j + wl]] -= 1
+                    if wc[s[j: j + wl]] == 0:
+                        del wc[s[j: j + wl]]
+                        if not wc:
+                            res.append(i)
+                    j += wl
+                elif j - i > 0:
+                    wc[s[i: i + wl]] = wc.get(s[i: i + wl], 0) + 1
+                    i += wl
+                else:
+                    i, j = i + wl, j + wl
         return res
