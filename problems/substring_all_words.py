@@ -1,5 +1,4 @@
-from collections import defaultdict
-from functools import partial
+from collections import Counter
 
 
 class Solution(object):
@@ -9,38 +8,24 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[int]
         """
-        indexes = defaultdict(partial(defaultdict, list))
-        for n, w in enumerate(words):
-            i = 0
-            while i < len(s):
-                j = s.find(w, i)
-                if j == -1:
-                    break
-                indexes[w][n].append(j)
-                i = j + 1
-            if not indexes[w][n]:
-                return []
-        def have_all(start):
-            if not any(indexes.values()):
-                return True
-            if start == len(s):
-                return False
-            for w in indexes.keys():
-                for n in indexes[w].keys():
-                    w_indexes = indexes[w][n]
-                    if start in w_indexes:
-                        del indexes[w][n]
-                        if have_all(start + len(w)):
-                            indexes[w][n] = w_indexes
-                            return True
-                        indexes[w][n] = w_indexes
+        total_len = sum(map(len, words))
+        if total_len > len(s) or not words:
+            return []
         res = []
-        for w in indexes.keys():
-            n = indexes[w].keys()[0]
-            w_indexes = indexes[w][n]
-            del indexes[w][n]
-            for i in w_indexes:
-                if have_all(i + len(w)):
-                    res.append(i)
-            indexes[w][n] = w_indexes
-        return sorted(res)
+        word_count = Counter(words)
+        def have_all(start):
+            if not word_count:
+                return True
+            for w in word_count.keys():
+                if s[start: start + len(w)] == w:
+                    word_count[w] -= 1
+                    if word_count[w] == 0:
+                        del word_count[w]
+                    if have_all(start + len(w)):
+                        word_count[w] = word_count.get(w, 0) + 1
+                        return True
+                    word_count[w] = word_count.get(w, 0) + 1
+        for start in xrange(0, len(s) - total_len + 1):
+            if have_all(start):
+                res.append(start)
+        return res
