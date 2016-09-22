@@ -13,3 +13,4 @@ from problems.trapping_rain_water import Solution
 ])
 def test_trap(height, expected):
     assert Solution().trap(height) == expected
+    assert Solution().trap_2pointers(height) == expected
