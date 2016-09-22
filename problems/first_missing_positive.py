@@ -7,7 +7,7 @@ class Solution(object):
         # 9:41 - 9:54
         i = 0
         while i < len(nums):
-            if 1 <= nums[i] <= len(nums) and nums[i] != i + 1 and nums[i] != nums[nums[i] - 1]:
+            if 1 <= nums[i] <= len(nums) and nums[i] != nums[nums[i] - 1]:
                 nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
             else:
                 i += 1
