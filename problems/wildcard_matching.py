@@ -5,12 +5,45 @@ class Solution(object):
         :type p: str
         :rtype: bool
         """
-        match = [[False] * (len(p) + 1) for __ in xrange(len(s) + 1)]
-        for i in xrange(len(s) + 1):
-            for j in xrange(len(p) + 1):
-                if i > 0 and j > 0 and (p[j - 1] == '?' or p[j - 1] == s[i - 1]) and match[i - 1][j - 1] \
-                        or i > 0 and j > 0 and p[j - 1] == '*' and match[i - 1][j] \
-                        or j > 0 and p[j - 1] == '*' and match[i][j - 1] \
-                        or i == 0 and j == 0:
-                    match[i][j] = True
-        return match[len(s)][len(p)]
+        class State:
+            def __init__(self):
+                self.char = None
+                self.repeat = None
+                self.next = None
+                self.prev = None
+                self.shortest = None
+        initial = State()
+        final = initial
+        for c in p:
+            next = State()
+            if c == '*':
+                final.repeat = State()
+                final.repeat.char = '?'
+                final.repeat.next = final
+            else:
+                final.char = c
+            final.next = next
+            next.prev = final
+            final = next
+        final.shortest = 0
+        state = final.prev
+        while state is not None:
+            if state.repeat is None:
+                state.shortest = state.next.shortest + 1
+            else:
+                state.shortest = state.next.shortest
+            state = state.prev
+        def follow_forks(state):
+            if state.repeat is None:
+                return {state}
+            else:
+                return follow_forks(state.repeat) | follow_forks(state.next)
+        states = follow_forks(initial)
+        for i, c in enumerate(s):
+            rem = len(s) - i
+            next_states = set()
+            for state in states:
+                if (state.char == '?' or state.char == c) and state.shortest <= rem:
+                    next_states |= follow_forks(state.next)
+            states = next_states
+        return final in states
