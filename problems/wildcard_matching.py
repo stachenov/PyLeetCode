@@ -5,45 +5,16 @@ class Solution(object):
         :type p: str
         :rtype: bool
         """
-        class State:
-            def __init__(self):
-                self.char = None
-                self.repeat = None
-                self.next = None
-                self.prev = None
-                self.shortest = None
-        initial = State()
-        final = initial
+        if len(s) < sum(1 for c in p if c != '*'):
+            return False
+        match = [True]
         for c in p:
-            next = State()
-            if c == '*':
-                final.repeat = State()
-                final.repeat.char = '?'
-                final.repeat.next = final
-            else:
-                final.char = c
-            final.next = next
-            next.prev = final
-            final = next
-        final.shortest = 0
-        state = final.prev
-        while state is not None:
-            if state.repeat is None:
-                state.shortest = state.next.shortest + 1
-            else:
-                state.shortest = state.next.shortest
-            state = state.prev
-        def follow_forks(state):
-            if state.repeat is None:
-                return {state}
-            else:
-                return follow_forks(state.repeat) | follow_forks(state.next)
-        states = follow_forks(initial)
-        for i, c in enumerate(s):
-            rem = len(s) - i
-            next_states = set()
-            for state in states:
-                if (state.char == '?' or state.char == c) and state.shortest <= rem:
-                    next_states |= follow_forks(state.next)
-            states = next_states
-        return final in states
+            match.append(match[-1] and c == '*')
+        for cs in s:
+            prev = match
+            match = [False]
+            for j, cp in enumerate(p):
+                match.append(match[j] and cp == '*'
+                             or prev[j + 1] and cp == '*'
+                             or prev[j] and (cp == '?' or cp == cs))
+        return match[len(p)]
