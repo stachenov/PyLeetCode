@@ -38,3 +38,4 @@ from problems.trapping_rain_2 import Solution
 ])
 def test_trapRainWater(heightMap, expected):
     assert Solution().trapRainWater(heightMap) == expected
+    assert Solution().trapRainWater_fh(heightMap) == expected
