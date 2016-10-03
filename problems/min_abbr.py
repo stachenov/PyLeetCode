@@ -8,6 +8,8 @@ class Solution(object):
         :type dictionary: List[str]
         :rtype: str
         """
+        if len(target) <= 1:
+            return target
         dictionary = [w for w in dictionary if len(w) == len(target)]
         if not dictionary:
             return str(len(target))
@@ -18,14 +20,14 @@ class Solution(object):
                     matches[i].add(w)
         re_num = re.compile(r"(?:\d+|\D+)")
         if not matches[0]:
-            return target if len(target) == 1 else target[0] + str(len(target) - 1)
+            return target[0] + str(len(target) - 1)
         if not matches[-1]:
-            return target if len(target) == 1 else str(len(target) - 1) + target[-1]
+            return str(len(target) - 1) + target[-1]
         if not all(matches):
             first_empty = matches.index(set())
             return str(first_empty) + target[first_empty] + str(len(target) - (first_empty + 1))
 
-        def matching(abbr):
+        def matching(abbr):  # check if abbr matches any word in the dictionary
             i, s = 0, set()
             for p in re_num.findall(abbr):
                 if p[0].isdigit():
@@ -36,7 +38,7 @@ class Solution(object):
                             s &= matches[i + j]
                             if not s:  # intersection of all matching sets will be empty too
                                 return s
-                        else:  # first set, or all previous were empty
+                        else:  # first set (remember, they are all not empty)
                             s = set(matches[i + j])  # copy to avoid modifications in matches
                     i += len(p)
             return s
